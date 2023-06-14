@@ -84,11 +84,23 @@ else:
 # In[ ]:
 
 
+st.set_page_config(
+    page_title="the thing", 
+    page_icon="🪨", 
+    layout="centered", 
+    initial_sidebar_state="collapsed", 
+    menu_items=None
+    )
+
+
+# In[ ]:
+
+
 # with col_a:
 head = st.markdown("### Do you have :blue[the thing]?")
 sub_head = st.markdown("#### Scan your face to find out...")
-
 picture = st.camera_input(label="Scan your face", label_visibility="collapsed")
+info_bar = st.empty()
 
 # with col_b:
 if picture:
@@ -125,6 +137,8 @@ if picture:
         pickle.dump(known_face_encodings, f)
     with open('known_face_results.pkl', 'wb') as f:
         pickle.dump(known_face_results, f)
+
+    info_bar = info_bar.markdown("For fun only, running [this stupid piece of code](https://github.com/knhash/the-thing)")
     
 
 
