@@ -138,7 +138,7 @@ if picture:
     with open('known_face_results.pkl', 'wb') as f:
         pickle.dump(known_face_results, f)
 
-    info_bar = info_bar.markdown("No evilness, running [this stupid piece of code](https://github.com/knhash/the-thing) for lolz")
+info_bar = info_bar.markdown("No evilness, running [this stupid piece of code](https://github.com/knhash/the-thing) for lolz")
     
 
 
