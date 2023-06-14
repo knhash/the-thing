@@ -1,32 +1,33 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 # from IPython.core.interactiveshell import InteractiveShell
 # InteractiveShell.ast_node_interactivity = "all"
 
 
-# In[5]:
+# In[1]:
 
 
 # %pip install streamlit
 # %pip install face_recognition
 
 
-# In[8]:
+# In[9]:
 
 
 import face_recognition
 import streamlit as st
 import numpy as np
+from datetime import datetime
 from PIL import Image
 import pickle 
-from os.path import exists
+from os.path import exists, getmtime
 
 
-# In[ ]:
+# In[3]:
 
 
 adhd_symptoms = ["miss details and are distracted easily",
@@ -49,7 +50,7 @@ adhd_symptoms = ["miss details and are distracted easily",
 "blurt out answers and inappropriate comments"]
 
 
-# In[34]:
+# In[4]:
 
 
 def rando_result():
@@ -65,20 +66,33 @@ def rando_result():
         }
 
 
-# In[6]:
+# In[ ]:
 
 
-if exists('known_face_encodings.pkl'):      
-    with open('known_face_encodings.pkl', 'rb') as f:
-        known_face_encodings = pickle.load(f)
-else:
-    known_face_encodings = []
+seconds_in_a_week = 604800
+
+
+# In[5]:
+
+
+known_face_encodings = []
+known_face_results = []
+
+if exists('known_face_encodings.pkl'):   
+    modified_time = getmtime('known_face_encodings.pkl')    
+    age_of_modification_seconds = int(datetime.now().timestamp() - modified_time)
+    if age_of_modification_seconds < seconds_in_a_week: # purge after 7 days of inactivity
+        with open('known_face_encodings.pkl', 'rb') as f:
+            known_face_encodings = pickle.load(f)    
+            known_face_encodings = known_face_encodings[-1000:] # keep only the latest 1k embeddings in memory
 
 if exists('known_face_results.pkl'):
-    with open('known_face_results.pkl', 'rb') as f:
-        known_face_results = pickle.load(f)
-else:
-    known_face_results = []
+    modified_time = getmtime('known_face_results.pkl')    
+    age_of_modification_seconds = int(datetime.now().timestamp() - modified_time)
+    if age_of_modification_seconds < seconds_in_a_week: # purge after 7 days of inactivity
+        with open('known_face_results.pkl', 'rb') as f:
+            known_face_results = pickle.load(f)
+            known_face_results = known_face_results[-1000:] # keep only the latest 1k embeddings in memory
 
 
 # In[ ]:
@@ -100,7 +114,6 @@ st.set_page_config(
 head = st.markdown("### Do you have :blue[the thing]?")
 sub_head = st.markdown("#### Scan your face to find out...")
 picture = st.camera_input(label="Scan your face", label_visibility="collapsed")
-info_bar = st.empty()
 
 # with col_b:
 if picture:
@@ -138,7 +151,8 @@ if picture:
     with open('known_face_results.pkl', 'wb') as f:
         pickle.dump(known_face_results, f)
 
-info_bar = info_bar.markdown("No evilness, running [this stupid piece of code](https://github.com/knhash/the-thing) for lolz")
+st.markdown("Running this stupid [piece of code](https://github.com/knhash/the-thing) for lolz.")
+st.caption("Purging image data on server regularly (latest 1k images or 7 days of inactivity)")
     
 
 
