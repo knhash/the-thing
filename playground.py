@@ -110,12 +110,12 @@ if picture:
             # new face!
             known_face_encodings.append(face_encoding)
             known_face_results.append(rando_result())
-            index_result = len(known_face_results)
+            index_result = len(known_face_results) - 1
         else:
             # existing face
             index_result = np.where(results)[0][0]
 
-        print(known_face_results)
+        # print(known_face_results)
         if known_face_results[index_result]['status'] == 1:
             sub_head.markdown("#### :green[Yes.] You "+ known_face_results[index_result]['symptom'])
         else:
