@@ -151,7 +151,7 @@ if picture:
     with open('known_face_results.pkl', 'wb') as f:
         pickle.dump(known_face_results, f)
 
-st.markdown("Running this stupid [piece of code](https://github.com/knhash/the-thing) for lolz.")
+st.markdown("No evilness, running this stupid [code](https://github.com/knhash/the-thing) for lolz.")
 st.caption("Purging image data on server regularly (latest 1k images or 7 days of inactivity)")
     
 
